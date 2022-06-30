@@ -1,0 +1,34 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.6.xsd">
+
+    <changeSet id="1" author="kasim">
+        <createTable tableName="drug">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="drug_pkey"/>
+            </column>
+            <column name="name" type="VARCHAR(127)">
+                <constraints nullable="false" unique="true" uniqueConstraintName="drug_name_u"/>
+            </column>
+            <column name="description" type="varchar(255)"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="2" author="kasim">
+        <createTable tableName="available_drug">
+            <column name="id" autoIncrement="true" type="BIGINT">
+                <constraints nullable="false" primaryKey="true" primaryKeyName="available_drug_pkey"/>
+            </column>
+            <column name="expiration_date" type="DATE"/>
+            <column name="drug_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+
+        <addForeignKeyConstraint baseColumnNames="drug_id" baseTableName="available_drug"
+                                 constraintName="drug_id_available_drug_drug_fk" deferrable="false"
+                                 initiallyDeferred="false" onDelete="CASCADE" onUpdate="NO ACTION"
+                                 referencedColumnNames="id" referencedTableName="drug" validate="true"/>
+
+    </changeSet>
+</databaseChangeLog>
