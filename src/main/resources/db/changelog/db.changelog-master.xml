@@ -20,6 +20,7 @@
                 <constraints nullable="false" primaryKey="true" primaryKeyName="available_drug_pkey"/>
             </column>
             <column name="expiration_date" type="DATE"/>
+            <column name="chat_id" type="BIGINT"/>
             <column name="drug_id" type="BIGINT">
                 <constraints nullable="false"/>
             </column>
