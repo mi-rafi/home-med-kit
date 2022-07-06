@@ -32,4 +32,8 @@
                                  referencedColumnNames="id" referencedTableName="drug" validate="true"/>
 
     </changeSet>
+
+    <changeSet id="3" author="kasim">
+        <createSequence sequenceName="hibernate_sequence"/>
+    </changeSet>
 </databaseChangeLog>

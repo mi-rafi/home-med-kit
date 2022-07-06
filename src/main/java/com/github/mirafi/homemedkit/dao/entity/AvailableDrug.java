@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Table(name = "available_drug")
 public class AvailableDrug {
     @Id
+    @GeneratedValue
     private long id;
 
     @Column(name = "chat_id")
@@ -23,11 +24,4 @@ public class AvailableDrug {
     @ManyToOne
     @JoinColumn(name = "drug_id", nullable = false)
     private Drug drug;
-
-    public AvailableDrug(long chatId, LocalDate expirationDate) {
-        this.chatId = chatId;
-        this.expirationDate = expirationDate;
-    }
-
-
 }

@@ -13,9 +13,9 @@ public class AppConfig {
 
     @Bean
     public LocaleResourcesProvider localeResourcesProvider() {
-        ResourceBundle en = ResourceBundle.getBundle("message");
-        Locale ruLoc = new Locale("ru");
-        ResourceBundle ru = ResourceBundle.getBundle("message", ruLoc);
+        ResourceBundle en = ResourceBundle.getBundle("messages");
+        Locale ruLoc = new Locale("ru", "RU");
+        ResourceBundle ru = ResourceBundle.getBundle("messages", ruLoc);
         return new LocaleResourcesProvider(List.of(en, ru), ruLoc);
     }
 

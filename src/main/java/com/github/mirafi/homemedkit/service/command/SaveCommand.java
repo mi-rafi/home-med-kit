@@ -54,17 +54,21 @@ public class SaveCommand implements Command {
         if (drugO.isPresent()) {
             drug = drugO.get();
         } else {
-            Drug.DrugBuilder builder = Drug.builder();
-            builder.name(data[0]);
+            drug = new Drug();
+            drug.setName(data[0]);
             if (data.length >= 3) {
-                builder.description(data[1]);
+                drug.setDescription(data[1]);
             }
-            drug = builder.build();
         }
         String dateStr = data[data.length - 1].trim();
         LocalDate date = LocalDate.parse(dateStr, DateTimeFormatter.ISO_LOCAL_DATE);
-        drug.getAvailableDrugs().add(new AvailableDrug(message.getChatId(), date));
+        AvailableDrug availableDrug = new AvailableDrug();
+        availableDrug.setChatId(message.getChatId());
+        availableDrug.setExpirationDate(date);
+        availableDrug.setDrug(drug);
+        drug.getAvailableDrugs().add(availableDrug);
         drugRepository.save(drug);
+        drugRepository.flush();
         stateProvider.updateState(message.getChatId(), StateProvider.State.MAIN_MENU);
         return SendMessage.builder().chatId(message.getChatId().toString()).text(localeResourcesProvider.getMessage("save.ok")).build();
     }
