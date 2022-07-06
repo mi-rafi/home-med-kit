@@ -5,6 +5,8 @@ import com.github.mirafi.homemedkit.dao.MedKitRepository;
 import com.github.mirafi.homemedkit.service.StateProvider;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
+import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
@@ -30,7 +32,7 @@ public class DeleteCommand implements Command{
 
     @Override
     @Transactional
-    public Message execute(Update update) {
+    public BotApiMethod<Message> execute(Update update) {
         if (update.hasMessage()) {
             Message message = update.getMessage();
 //            if (message.hasText()) medKitRepository.findDrugByNameLikeIgnoreCase();
@@ -38,7 +40,7 @@ public class DeleteCommand implements Command{
             return null;
         }
         Message message = update.getMessage();
-        return message;
+        return SendMessage.builder().chatId(message.getChatId().toString()).text("Deleted").build();
     }
 
 
