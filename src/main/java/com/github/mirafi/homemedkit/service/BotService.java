@@ -1,2 +1,4 @@
-package com.github.mirafi.homemedkit.service;public class BotService {
+package com.github.mirafi.homemedkit.service;
+
+public class BotService {
 }
