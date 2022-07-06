@@ -9,12 +9,12 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Component
-public class SaveCommand implements Command {
+public class DeleteCommand implements Command{
     private final MedKitRepository medKitRepository;
     private final AvailableDrugRepository availableDrugRepository;
     private final StateProvider stateProvider;
 
-    public SaveCommand(MedKitRepository medKitRepository, AvailableDrugRepository availableDrugRepository, StateProvider stateProvider) {
+    public DeleteCommand(MedKitRepository medKitRepository, AvailableDrugRepository availableDrugRepository, StateProvider stateProvider) {
         this.medKitRepository = medKitRepository;
         this.availableDrugRepository = availableDrugRepository;
         this.stateProvider = stateProvider;
@@ -24,20 +24,24 @@ public class SaveCommand implements Command {
     @Override
     public boolean needsReaction(Update update) {
         return update.hasMessage()
-                && StateProvider.State.SAVE.equals(stateProvider.getState(update.getMessage().getChatId()))
+                && StateProvider.State.DELETE.equals(stateProvider.getState(update.getMessage().getChatId()))
                 && update.getMessage().hasText();
     }
 
     @Override
     @Transactional
     public Message execute(Update update) {
-        Message message = update.getMessage();
-        String[] data = message.getText().split("\n");
-        if (data.length < 1) {
-
+        if (update.hasMessage()) {
+            Message message = update.getMessage();
+//            if (message.hasText()) medKitRepository.findDrugByNameLikeIgnoreCase();
+        } else {
+            return null;
         }
-        //if (message.hasText()) medKitRepository.findDrugByNameLikeIgnoreCase();
-        //Message message = update.getMessage();
+        Message message = update.getMessage();
         return message;
     }
+
+
+
+
 }

@@ -1,6 +1,7 @@
 package com.github.mirafi.homemedkit.controller;
 
-import com.github.mirafi.homemedkit.command.Command;
+
+import com.github.mirafi.homemedkit.service.command.Command;
 import lombok.SneakyThrows;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -44,7 +45,7 @@ public class BotController extends TelegramLongPollingBot {
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
-        update.
+
         if (update.hasMessage()) {
             Message message = update.getMessage();
             SendMessage.SendMessageBuilder sendMessageBuilder = SendMessage.builder().chatId(message.getChatId().toString());

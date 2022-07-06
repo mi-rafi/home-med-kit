@@ -1,6 +1,5 @@
 package com.github.mirafi.homemedkit;
 
-import com.github.mirafi.homemedkit.command.*;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
