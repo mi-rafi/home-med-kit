@@ -1,4 +1,4 @@
-package com.github.mirafi.homemedkit.command;
+package com.github.mirafi.homemedkit.service.command;
 
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;

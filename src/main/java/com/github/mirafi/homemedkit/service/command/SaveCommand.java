@@ -1,4 +1,4 @@
-package com.github.mirafi.homemedkit.command;
+package com.github.mirafi.homemedkit.service.command;
 
 import com.github.mirafi.homemedkit.dao.AvailableDrugRepository;
 import com.github.mirafi.homemedkit.dao.MedKitRepository;
@@ -23,17 +23,18 @@ public class SaveCommand implements Command {
     public boolean needsReaction(Update update) {
         return update.hasMessage()
                 && StateProvider.State.SAVE.equals(stateProvider.getState(update.getMessage().getChatId()))
-                && update.getMessage().hasText()
+                && update.getMessage().hasText();
     }
 
     @Override
     @Transactional
     public Message execute(Update update) {
-        if (update.hasMessage()) {
-            Message message = update.getMessage();
-            if (message.hasText()) medKitRepository.findDrugByNameLikeIgnoreCase()
-        } else {
-            return null;
+        Message message = update.getMessage();
+        String[] data = message.getText().split("\n");
+        if (data.length < 1) {
+
         }
+        if (message.hasText()) medKitRepository.findDrugByNameLikeIgnoreCase()
+
     }
 }
