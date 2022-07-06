@@ -1,7 +1,7 @@
 package com.github.mirafi.homemedkit.service.command;
 
 import com.github.mirafi.homemedkit.dao.AvailableDrugRepository;
-import com.github.mirafi.homemedkit.dao.MedKitRepository;
+import com.github.mirafi.homemedkit.dao.DrugRepository;
 import com.github.mirafi.homemedkit.service.StateProvider;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,11 +12,11 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 
 @Component
 public class DeleteCommand implements Command{
-    private final MedKitRepository medKitRepository;
+    private final DrugRepository medKitRepository;
     private final AvailableDrugRepository availableDrugRepository;
     private final StateProvider stateProvider;
 
-    public DeleteCommand(MedKitRepository medKitRepository, AvailableDrugRepository availableDrugRepository, StateProvider stateProvider) {
+    public DeleteCommand(DrugRepository medKitRepository, AvailableDrugRepository availableDrugRepository, StateProvider stateProvider) {
         this.medKitRepository = medKitRepository;
         this.availableDrugRepository = availableDrugRepository;
         this.stateProvider = stateProvider;
