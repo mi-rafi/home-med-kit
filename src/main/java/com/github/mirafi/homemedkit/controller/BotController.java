@@ -1,25 +1,26 @@
 package com.github.mirafi.homemedkit.controller;
 
-
 import com.github.mirafi.homemedkit.service.command.Command;
 import lombok.SneakyThrows;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
+import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @Component
 public class BotController extends TelegramLongPollingBot {
 
+    private static final Logger log = LoggerFactory.getLogger(BotController.class);
     private final String username;
     private final String token;
 
@@ -45,17 +46,13 @@ public class BotController extends TelegramLongPollingBot {
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
-
-        if (update.hasMessage()) {
-            Message message = update.getMessage();
-            SendMessage.SendMessageBuilder sendMessageBuilder = SendMessage.builder().chatId(message.getChatId().toString());
-            if (message.getText().trim().toLowerCase(Locale.ROOT).equals("ping")) {
-                sendMessageBuilder.text("Pong");
-            } else {
-                sendMessageBuilder.text("Echo! " + message.getText());
+        commands.stream().filter(c -> c.needsReaction(update)).forEach(c -> {
+            try {
+                execute(c.execute(update));
+            } catch (TelegramApiException e) {
+                log.error("can not execute command", e);
             }
-            execute(sendMessageBuilder.build());
-        }
+        });
     }
 
 

@@ -1,8 +1,6 @@
 package com.github.mirafi.homemedkit.config;
 
-
-import com.github.mirafi.homemedkit.controller.BotController;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.web.WebProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.telegram.telegrambots.meta.TelegramBotsApi;

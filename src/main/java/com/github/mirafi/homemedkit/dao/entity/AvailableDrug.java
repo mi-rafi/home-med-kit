@@ -24,5 +24,10 @@ public class AvailableDrug {
     @JoinColumn(name = "drug_id", nullable = false)
     private Drug drug;
 
+    public AvailableDrug(long chatId, LocalDate expirationDate) {
+        this.chatId = chatId;
+        this.expirationDate = expirationDate;
+    }
+
 
 }
