@@ -42,8 +42,8 @@ public class SaveCommand implements Command {
         return (update.hasMessage()
                 && StateProvider.State.SAVE.equals(stateProvider.getState(update.getMessage().getChatId()))
                 && update.getMessage().hasText())
-                || (StateProvider.State.SAVE.equals(stateProvider.getState(update.getChatMember().getChat().getId()))
-                && update.hasCallbackQuery()
+                || update.hasCallbackQuery()
+                && (StateProvider.State.SAVE.equals(stateProvider.getState(update.getCallbackQuery().getMessage().getChatId()))
                 && CallbackData.BACK.getName().equals(update.getCallbackQuery().getData()));
 //        return true;
     }
@@ -95,9 +95,11 @@ public class SaveCommand implements Command {
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
         List<InlineKeyboardButton> rowInline = new ArrayList<>();
-        rowInline.add(InlineKeyboardButton.builder().text("Save me").callbackData(CallbackData.SAVE.getName()).build());
+        rowInline.add(InlineKeyboardButton.builder()
+                .text(localeResourcesProvider.getMessage("menu.back"))
+                .callbackData(CallbackData.BACK.getName()).build());
         rowsInline.add(rowInline);
         markupInline.setKeyboard(rowsInline);
-        return SendMessage.builder().chatId(chat_id.toString()).text("Test").replyMarkup(markupInline).build();
+        return SendMessage.builder().chatId(chat_id.toString()).text(localeResourcesProvider.getMessage("save.description")).replyMarkup(markupInline).build();
     }
 }

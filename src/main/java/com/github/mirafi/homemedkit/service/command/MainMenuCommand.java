@@ -1,8 +1,10 @@
 package com.github.mirafi.homemedkit.service.command;
 
+import com.github.mirafi.homemedkit.exception.TelegramServerException;
 import com.github.mirafi.homemedkit.service.CallbackData;
 import com.github.mirafi.homemedkit.service.LocaleResourcesProvider;
 import com.github.mirafi.homemedkit.service.StateProvider;
+import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
@@ -13,6 +15,7 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 import java.util.ArrayList;
 import java.util.List;
 
+@Component
 public class MainMenuCommand implements Command {
 
     private final StateProvider stateProvider;
@@ -43,13 +46,31 @@ public class MainMenuCommand implements Command {
     public boolean isDisplayed(Update update) {
         Long chatId;
         if (update.hasMessage()) {
-
+            chatId = update.getMessage().getChatId();
+        } else if (update.hasCallbackQuery()) {
+            chatId = update.getCallbackQuery().getMessage().getChatId();
+        } else {
+            throw new TelegramServerException("");
         }
-        return false;
+        return StateProvider.State.MAIN_MENU.equals(stateProvider.getState(chatId));
     }
 
     @Override
     public BotApiMethod<Message> display(Update update) {
-        return null;
+        Long chatId;
+        if (update.hasMessage()) {
+            chatId = update.getMessage().getChatId();
+        } else if (update.hasCallbackQuery()) {
+            chatId = update.getCallbackQuery().getMessage().getChatId();
+        } else {
+            throw new TelegramServerException("");
+        }
+        InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
+        List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
+        List<InlineKeyboardButton> rowInline = new ArrayList<>();
+        rowInline.add(InlineKeyboardButton.builder().text(localeResourcesProvider.getMessage("save.drug")).callbackData(CallbackData.SAVE.getName()).build());
+        rowsInline.add(rowInline);
+        markupInline.setKeyboard(rowsInline);
+        return SendMessage.builder().chatId(chatId.toString()).text(localeResourcesProvider.getMessage("main.menu.message")).replyMarkup(markupInline).build();
     }
 }
