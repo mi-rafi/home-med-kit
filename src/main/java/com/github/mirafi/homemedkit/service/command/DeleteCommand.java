@@ -32,18 +32,22 @@ public class DeleteCommand implements Command{
 
     @Override
     @Transactional
-    public BotApiMethod<Message> execute(Update update) {
+    public void execute(Update update) {
         if (update.hasMessage()) {
             Message message = update.getMessage();
 //            if (message.hasText()) medKitRepository.findDrugByNameLikeIgnoreCase();
         } else {
-            return null;
         }
         Message message = update.getMessage();
-        return SendMessage.builder().chatId(message.getChatId().toString()).text("Deleted").build();
     }
 
+    @Override
+    public boolean isDisplayed(Update update) {
+        return false;
+    }
 
-
-
+    @Override
+    public BotApiMethod<Message> display(Update update) {
+        return null;
+    }
 }

@@ -15,7 +15,7 @@ public class StateProvider {
     }
 
     public State getState(Long chatId) {
-        return chatIdToState.getOrDefault(chatId, State.HELP);
+        return chatIdToState.getOrDefault(chatId, State.MAIN_MENU);
     }
 
     public void updateState(Long chatId, State newState) {

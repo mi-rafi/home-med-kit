@@ -47,8 +47,11 @@ public class BotController extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         commands.stream().filter(c -> c.needsReaction(update)).forEach(c -> {
+            c.execute(update);
+        });
+        commands.stream().filter(c -> c.isDisplayed(update)).forEach(c -> {
             try {
-                execute(c.execute(update));
+                execute(c.display(update));
             } catch (TelegramApiException e) {
                 log.error("can not execute command", e);
             }
