@@ -7,7 +7,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.BotApiMethod;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardButton;
@@ -47,11 +49,21 @@ public class BotController extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         commands.stream().filter(c -> c.needsReaction(update)).forEach(c -> {
-            c.execute(update);
+            BotApiMethod<Message> method = c.execute(update);
+            if (method != null) {
+                try {
+                    execute(method);
+                } catch (TelegramApiException e) {
+                    log.error("can not execute command", e);
+                }
+            }
         });
         commands.stream().filter(c -> c.isDisplayed(update)).forEach(c -> {
             try {
-                execute(c.display(update));
+                BotApiMethod<Message> display = c.display(update);
+                if (display != null) {
+                    execute(display);
+                }
             } catch (TelegramApiException e) {
                 log.error("can not execute command", e);
             }

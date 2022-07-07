@@ -7,7 +7,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 public interface Command {
     boolean needsReaction(Update update);
 
-    void execute(Update update);
+    BotApiMethod<Message> execute(Update update);
 
     boolean isDisplayed(Update update);
 

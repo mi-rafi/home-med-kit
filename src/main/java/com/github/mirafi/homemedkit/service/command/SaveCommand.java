@@ -26,13 +26,11 @@ import java.util.Optional;
 @Component
 public class SaveCommand implements Command {
     private final DrugRepository drugRepository;
-    private final AvailableDrugRepository availableDrugRepository;
     private final StateProvider stateProvider;
     private final LocaleResourcesProvider localeResourcesProvider;
 
-    public SaveCommand(DrugRepository drugRepository, AvailableDrugRepository availableDrugRepository, StateProvider stateProvider, LocaleResourcesProvider localeResourcesProvider) {
+    public SaveCommand(DrugRepository drugRepository, StateProvider stateProvider, LocaleResourcesProvider localeResourcesProvider) {
         this.drugRepository = drugRepository;
-        this.availableDrugRepository = availableDrugRepository;
         this.stateProvider = stateProvider;
         this.localeResourcesProvider = localeResourcesProvider;
     }
@@ -45,12 +43,11 @@ public class SaveCommand implements Command {
                 || update.hasCallbackQuery()
                 && (StateProvider.State.SAVE.equals(stateProvider.getState(update.getCallbackQuery().getMessage().getChatId()))
                 && CallbackData.BACK.getName().equals(update.getCallbackQuery().getData()));
-//        return true;
     }
 
     @Override
     @Transactional
-    public void execute(Update update) {
+    public BotApiMethod<Message> execute(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
             Message message = update.getMessage();
             String[] data = message.getText().split("\n");
@@ -79,9 +76,12 @@ public class SaveCommand implements Command {
             drugRepository.save(drug);
             drugRepository.flush();
             stateProvider.updateState(message.getChatId(), StateProvider.State.MAIN_MENU);
+            return SendMessage.builder().chatId(message.getChatId().toString()).text(localeResourcesProvider.getMessage("save.ok")).build();
         } else if (update.hasCallbackQuery() && CallbackData.BACK.getName().equals(update.getCallbackQuery().getData())) {
             stateProvider.updateState(update.getCallbackQuery().getMessage().getChatId(), StateProvider.State.MAIN_MENU);
+            return null;
         }
+        return null;
     }
 
     @Override

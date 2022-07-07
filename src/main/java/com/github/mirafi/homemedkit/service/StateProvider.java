@@ -27,6 +27,6 @@ public class StateProvider {
         MAIN_MENU,
         SAVE,
         DELETE,
-        FIND_BY_NAME
+        FIND_ALL
     }
 }

@@ -9,6 +9,7 @@ import java.util.Optional;
 public enum CallbackData {
     SAVE("SAVE"),
     BACK("back"),
+    FIND_ALL("find_all"),
     UNDEFINED("undefined");
 
 
