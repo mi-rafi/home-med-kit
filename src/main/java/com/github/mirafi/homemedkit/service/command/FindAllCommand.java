@@ -11,7 +11,6 @@ import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.text.DateFormat;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Map;
@@ -42,13 +41,12 @@ public class FindAllCommand implements Command {
         String message = localeResourcesProvider.getMessage("all.drug.format");
         SendMessage.SendMessageBuilder sendMessageBuilder = SendMessage.builder().chatId(chatId.toString());
         if (availableDrugList.isEmpty()) {
-            sendMessageBuilder.text("Ooops");
+            sendMessageBuilder.text(localeResourcesProvider.getMessage("all.drug.not.found"));
         } else {
-           /* Map<Long, AvailableDrug> drugIdToAvailableDrug = availableDrugList.stream().collect(Collectors.toMap(a -> a.getDrug().getId(), a -> DateTimeFormatter.ISO_LOCAL_DATE.format(a.getExpirationDate()), (c,d) -> c + ", " + d))
-            List<Drug> drug = availableDrugList.stream().map(a -> a.getDrug()).distinct().collect(Collectors.toUnmodifiableList());
-
-            String messageF = String.format(message, name, description, expiredDates);
-            sendMessageBuilder.text(messageF);*/
+            Map<Long, String> drugIdToAvailableDrug = availableDrugList.stream().collect(Collectors.toMap(a -> a.getDrug().getId(), a -> DateTimeFormatter.ISO_LOCAL_DATE.format(a.getExpirationDate()), (a, b) -> a + ", " + b));
+            List<Drug> drug = availableDrugList.stream().map(AvailableDrug::getDrug).distinct().toList();
+            String msg = drug.stream().map(d -> String.format(message, d.getName(), d.getDescription(), drugIdToAvailableDrug.get(d.getId()))).collect(Collectors.joining("\n"));
+            sendMessageBuilder.text(msg);
         }
         stateProvider.updateState(chatId, StateProvider.State.MAIN_MENU);
         return sendMessageBuilder.build();
