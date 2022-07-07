@@ -10,7 +10,8 @@ public enum CallbackData {
     SAVE("SAVE"),
     BACK("back"),
     FIND_ALL("find_all"),
-    UNDEFINED("undefined");
+    UNDEFINED("undefined"),
+    DELETE("delete");
 
 
     private final String name;

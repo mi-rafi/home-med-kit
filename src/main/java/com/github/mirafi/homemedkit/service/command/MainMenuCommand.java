@@ -39,6 +39,7 @@ public class MainMenuCommand implements Command {
         switch (data) {
             case SAVE -> stateProvider.updateState(update.getCallbackQuery().getMessage().getChatId(), StateProvider.State.SAVE);
             case FIND_ALL -> stateProvider.updateState(update.getCallbackQuery().getMessage().getChatId(), StateProvider.State.FIND_ALL);
+            case DELETE -> stateProvider.updateState(update.getCallbackQuery().getMessage().getChatId(), StateProvider.State.DELETE);
             default -> {}
         }
         return null;
@@ -69,10 +70,13 @@ public class MainMenuCommand implements Command {
         }
         InlineKeyboardMarkup markupInline = new InlineKeyboardMarkup();
         List<List<InlineKeyboardButton>> rowsInline = new ArrayList<>();
-        List<InlineKeyboardButton> rowInline = new ArrayList<>();
-        rowInline.add(InlineKeyboardButton.builder().text(localeResourcesProvider.getMessage("save.drug")).callbackData(CallbackData.SAVE.getName()).build());
-        rowInline.add(InlineKeyboardButton.builder().text(localeResourcesProvider.getMessage("all.drug")).callbackData(CallbackData.FIND_ALL.getName()).build());
-        rowsInline.add(rowInline);
+        List<InlineKeyboardButton> rowInline1 = new ArrayList<>();
+        List<InlineKeyboardButton> rowInline2 = new ArrayList<>();
+        rowInline1.add(InlineKeyboardButton.builder().text(localeResourcesProvider.getMessage("save.drug")).callbackData(CallbackData.SAVE.getName()).build());
+        rowInline1.add(InlineKeyboardButton.builder().text(localeResourcesProvider.getMessage("delete.drug")).callbackData(CallbackData.DELETE.getName()).build());
+        rowInline2.add(InlineKeyboardButton.builder().text(localeResourcesProvider.getMessage("all.drug")).callbackData(CallbackData.FIND_ALL.getName()).build());
+        rowsInline.add(rowInline1);
+        rowsInline.add(rowInline2);
         markupInline.setKeyboard(rowsInline);
         return SendMessage.builder().chatId(chatId.toString()).text(localeResourcesProvider.getMessage("main.menu.message")).replyMarkup(markupInline).build();
     }
